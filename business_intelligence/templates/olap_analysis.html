@@ -49,26 +49,17 @@
     </div>
 
 <script>
-    // Dummy data labels (year-month)
-    const labels = [
-        "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", 
-        "2024-06", "2024-07", "2024-08", "2024-09", "2024-10"
-    ];
+    // Data dari Django (dalam format JSON)
+    const labels = {{ labels|safe }};
+    const priceActual = {{ price_actual|safe }};
+    const pricePredicted = {{ price_predicted|safe }};
+    const starsActual = {{ stars_actual|safe }};
+    const starsPredicted = {{ stars_predicted|safe }};
+    const thumbsUpData = {{ thumbs_up|safe }};
 
-    // Dummy actual & predicted price data
-    const priceActual = [120, 130, 125, 140, 135, 150, 155, 160, 158, 165];
-    const pricePredicted = [118, 128, 130, 138, 140, 148, 157, 162, 160, 168];
-
-    // Dummy actual & predicted stars data (scale 0-5)
-    const starsActual = [3.8, 4.0, 4.1, 3.9, 4.2, 4.3, 4.1, 4.4, 4.5, 4.6];
-    const starsPredicted = [3.7, 4.1, 4.0, 4.0, 4.3, 4.2, 4.2, 4.5, 4.4, 4.7];
-
-    // Dummy average thumbs up data (per month)
-    const thumbsUpData = [45, 50, 48, 55, 60, 62, 65, 63, 70, 75];
-
-    // Chart Price (Line)
+    // Chart Price
     const ctxPrice = document.getElementById('priceChart').getContext('2d');
-    const priceChart = new Chart(ctxPrice, {
+    new Chart(ctxPrice, {
         type: 'line',
         data: {
             labels: labels,
@@ -93,19 +84,10 @@
         },
         options: {
             responsive: true,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            stacked: false,
             plugins: {
                 title: {
                     display: true,
                     text: 'Price Over Time',
-                },
-                legend: {
-                    display: true,
-                    position: 'top',
                 },
             },
             scales: {
@@ -126,70 +108,70 @@
         },
     });
 
-    // Chart Stars (Line)
+    // Chart Stars
     const ctxStars = document.getElementById('starsChart').getContext('2d');
-    const starsChart = new Chart(ctxStars, {
+    new Chart(ctxStars, {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [
-                {
-                    label: 'Actual Stars',
-                    data: starsActual,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    fill: true,
-                    tension: 0.3,
-                },
-                {
-                    label: 'Predicted Stars',
-                    data: starsPredicted,
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderDash: [5,5],
-                    fill: false,
-                    tension: 0.3,
-                },
-            ],
-        },
-        options: {
-            responsive: true,
-            interaction: {
-                mode: 'index',
-                intersect: false,
+        datasets: [
+            {
+                label: 'Actual Stars',
+                data: starsActual,
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.05)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4,
             },
-            stacked: false,
-            plugins: {
+            {
+                label: 'Predicted Stars',
+                data: starsPredicted,
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderDash: [8, 4],
+                fill: false,
+                tension: 0.4,
+                pointRadius: 4,
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Stars Over Time (with Descriptive Curve)',
+            },
+            legend: {
+                position: 'top',
+            },
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                min: 0,
+                max: 5,
+                ticks: {
+                    stepSize: 0.5
+                },
                 title: {
                     display: true,
-                    text: 'Stars Over Time',
-                },
-                legend: {
-                    display: true,
-                    position: 'top',
+                    text: 'Stars (0 - 5)',
                 },
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 5,
-                    title: {
-                        display: true,
-                        text: 'Stars',
-                    },
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Time (Year-Month)',
-                    },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Time (Year-Month)',
                 },
             },
         },
-    });
+    },
+});
 
-    // Chart Thumbs Up (Bar)
+    // Chart Thumbs Up
     const ctxThumbsUp = document.getElementById('thumbsUpChart').getContext('2d');
-    const thumbsUpChart = new Chart(ctxThumbsUp, {
+    new Chart(ctxThumbsUp, {
         type: 'bar',
         data: {
             labels: labels,
@@ -227,7 +209,6 @@
             },
         },
     });
-
 </script>
 </body>
 </html>
